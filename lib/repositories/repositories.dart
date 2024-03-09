@@ -7,4 +7,22 @@ class UserRepositories {
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
   final Dio _dio = Dio();
+
+  Future<bool> hasToken() async {
+    var value = await storage.read(key: 'token');
+    if (value != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> persistToken(String token) async {
+    await storage.write(key: 'token', value: token);
+  }
+
+  Future<void> deleteToken() async {
+    storage.delete(key: 'token');
+    storage.deleteAll();
+  }
 }
