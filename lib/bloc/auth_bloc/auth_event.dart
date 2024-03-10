@@ -21,4 +21,15 @@ class LoggedIn extends AuthenticationEvent {
   String toString() => "LoggedIn {$token}";
 }
 
+class Registered extends AuthenticationEvent {
+  final String userEmail;
+  const Registered({required this.userEmail});
+
+  @override
+  List<Object> get props => [userEmail];
+
+  @override
+  String toString() => "LoggedIn {$userEmail}";
+}
+
 class LoggedOut extends AuthenticationEvent {}

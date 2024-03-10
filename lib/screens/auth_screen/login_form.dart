@@ -1,5 +1,6 @@
 import 'package:bobby/bloc/login_bloc/login_bloc.dart';
 import 'package:bobby/repositories/repositories.dart';
+import 'package:bobby/screens/auth_screen/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../style/theme.dart' as Style;
@@ -150,12 +151,21 @@ class _LoginFormState extends State<LoginForm> {
                           width: 5,
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RegisterScreen(
+                                  userRepositories: widget.userRepositories,
+                                ),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Daftar',
                             style: TextStyle(
-                                color: Style.Colors.mainColor,
-                                fontWeight: FontWeight.bold),
+                              color: Style.Colors.mainColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         )
                       ],

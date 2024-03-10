@@ -1,15 +1,140 @@
+import 'package:bobby/bloc/register_bloc/register_bloc.dart';
+import 'package:bobby/repositories/repositories.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bobby/style/theme.dart' as Style;
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({super.key});
+  final UserRepositories userRepositories;
+  const RegisterForm({super.key, required this.userRepositories});
 
   @override
   State<RegisterForm> createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return BlocListener<RegisterBloc, RegisterState>(
+      listener: (context, state) {
+        if (state is RegisterFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Gagal register.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<RegisterBloc, RegisterState>(
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.only(right: 20, left: 20, top: 80),
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    height: 200,
+                    padding: EdgeInsets.only(bottom: 20, top: 40),
+                    child: const Text(
+                      'Daftar Akun',
+                      style: TextStyle(
+                          color: Style.Colors.mainColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold),
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.email),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Style.Colors.mainColor),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Style.Colors.mainColor),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        contentPadding: EdgeInsets.only(left: 10, right: 10),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold),
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.password),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Style.Colors.mainColor),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Style.Colors.mainColor),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      contentPadding: EdgeInsets.only(left: 10, right: 10),
+                      labelText: 'Password',
+                      labelStyle: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Container(
+                    child: state is RegisterLoading
+                        ? Center(
+                            child: Container(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator()),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Style.Colors.mainColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25)),
+                              ),
+                            ),
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )),
+                  ),
+                  // ignore: avoid_unnecessary_containers
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

@@ -13,7 +13,9 @@ void main() {
         return AuthenticationBloc(userRepositories: userRepositories)
           ..add(AppStarted());
       }),
-      child: MyApp(userRepositories: userRepositories),
+      child: MyApp(
+        userRepositories: userRepositories,
+      ),
     ),
   );
 }
