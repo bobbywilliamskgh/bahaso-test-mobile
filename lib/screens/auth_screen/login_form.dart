@@ -149,11 +149,14 @@ class _LoginFormState extends State<LoginForm> {
                         SizedBox(
                           width: 5,
                         ),
-                        Text(
-                          'Daftar',
-                          style: TextStyle(
-                              color: Style.Colors.mainColor,
-                              fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Text(
+                            'Daftar',
+                            style: TextStyle(
+                                color: Style.Colors.mainColor,
+                                fontWeight: FontWeight.bold),
+                          ),
                         )
                       ],
                     ),
