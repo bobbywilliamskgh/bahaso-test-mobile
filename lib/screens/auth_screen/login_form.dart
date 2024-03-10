@@ -90,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
                         fontWeight: FontWeight.bold),
                     controller: _passwordController,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
+                      prefixIcon: Icon(Icons.password),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Style.Colors.mainColor),
                         borderRadius: BorderRadius.circular(25),
