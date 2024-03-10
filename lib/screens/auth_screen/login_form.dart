@@ -43,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
             padding: EdgeInsets.only(right: 20, left: 20, top: 80),
             child: Form(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
                     height: 200,
@@ -110,18 +111,34 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(
                     height: 25,
                   ),
-                  state is LoginLoading
-                      ? CircularProgressIndicator()
-                      : TextButton(
-                          onPressed: _onLoginButtonPressed,
-                          child: Text(
-                            'LOG IN',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ),
+                  Container(
+                    child: state is LoginLoading
+                        ? Center(
+                            child: Container(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator()),
+                          )
+                        : ElevatedButton(
+                            onPressed: _onLoginButtonPressed,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Style.Colors.mainColor,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25)),
+                              ),
+                            ),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     child: Row(
                       children: [
