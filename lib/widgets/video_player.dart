@@ -23,11 +23,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         widget.videoUrl,
       ),
     );
-    _initializeVideoPlayerFuture =
-        _videoPlayerController.initialize().then((_) {
-      _videoPlayerController.play();
-      _videoPlayerController.setLooping(false);
-    });
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
 
     super.initState();
   }
@@ -45,10 +41,35 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-            aspectRatio: _videoPlayerController.value.aspectRatio,
-            child: VideoPlayer(_videoPlayerController),
-          );
+          return Stack(children: [
+            AspectRatio(
+              aspectRatio: _videoPlayerController.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController),
+            ),
+            Center(
+              child: SizedBox(
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      // If the video is playing, pause it.
+                      if (_videoPlayerController.value.isPlaying) {
+                        _videoPlayerController.pause();
+                      } else {
+                        // If the video is paused, play it.
+                        _videoPlayerController.play();
+                      }
+                    });
+                  },
+                  child: Icon(
+                    _videoPlayerController.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                    size: 20,
+                  ),
+                ),
+              ),
+            )
+          ]);
         } else {
           return Center(
             child: CircularProgressIndicator(),
