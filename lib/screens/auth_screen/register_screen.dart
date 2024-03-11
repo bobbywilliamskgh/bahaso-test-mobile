@@ -15,9 +15,8 @@ class RegisterScreen extends StatelessWidget {
       body: BlocProvider(
         create: (context) {
           return RegisterBloc(
-            userRepositories: userRepositories,
-            authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
-          );
+              userRepositories: userRepositories,
+              authenticationBloc: BlocProvider.of<AuthenticationBloc>(context));
         },
         child: RegisterForm(
           userRepositories: userRepositories,

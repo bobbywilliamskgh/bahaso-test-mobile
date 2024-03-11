@@ -40,6 +40,6 @@ class UserRepositories {
       "email": email,
       "password": password,
     });
-    return response.data['email'];
+    return response.data['token'];
   }
 }

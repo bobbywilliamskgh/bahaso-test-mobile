@@ -1,5 +1,6 @@
 import 'package:bobby/bloc/register_bloc/register_bloc.dart';
 import 'package:bobby/repositories/repositories.dart';
+import 'package:bobby/screens/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bobby/style/theme.dart' as Style;
@@ -18,6 +19,13 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    _onRegisterButtonPressed() {
+      BlocProvider.of<RegisterBloc>(context).add(RegisterButtonPressed(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ));
+    }
+
     return BlocListener<RegisterBloc, RegisterState>(
       listener: (context, state) {
         if (state is RegisterFailure) {
@@ -27,6 +35,23 @@ class _RegisterFormState extends State<RegisterForm> {
               backgroundColor: Colors.red,
             ),
           );
+        }
+        if (state is RegisterSuccess) {
+          showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                    title: Text('Registrasi Akun Berhasil'),
+                    content: Text(
+                        'Silahkan login dengan masukkan email dan password yang telah terdaftar'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          },
+                          child: Text('OK'))
+                    ],
+                  ));
         }
       },
       child: BlocBuilder<RegisterBloc, RegisterState>(
@@ -112,7 +137,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                 child: CircularProgressIndicator()),
                           )
                         : ElevatedButton(
-                            onPressed: () {},
+                            onPressed: _onRegisterButtonPressed,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Style.Colors.mainColor,
                               shape: const RoundedRectangleBorder(

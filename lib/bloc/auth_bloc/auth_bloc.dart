@@ -22,6 +22,11 @@ class AuthenticationBloc
       emit(AuthenticationAuthenticated());
     });
 
+    on<Registered>((event, emit) async {
+      emit(AuthenticationLoading());
+      emit(AuthenticationUnauthenticated());
+    });
+
     on<LoggedOut>((event, emit) async {
       emit(AuthenticationLoading());
       await userRepositories.deleteToken();

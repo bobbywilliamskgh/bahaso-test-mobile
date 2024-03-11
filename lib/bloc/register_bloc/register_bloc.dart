@@ -13,16 +13,18 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc(
       {required this.userRepositories, required this.authenticationBloc})
       : super(RegisterInitial()) {
-    on<RegisterButtonPressed>((event, emit) async {
-      emit(RegisterLoading());
-      try {
-        final userEmail =
-            await userRepositories.register(event.email, event.password);
-        authenticationBloc.add(Registered(userEmail: userEmail));
-        emit(RegisterInitial());
-      } catch (error) {
-        emit(RegisterFailure(error: error.toString()));
-      }
-    });
+    on<RegisterButtonPressed>(
+      (event, emit) async {
+        emit(RegisterLoading());
+        try {
+          final token =
+              await userRepositories.register(event.email, event.password);
+          authenticationBloc.add(Registered(token: token));
+          emit(RegisterSuccess());
+        } catch (error) {
+          emit(RegisterFailure(error: error.toString()));
+        }
+      },
+    );
   }
 }

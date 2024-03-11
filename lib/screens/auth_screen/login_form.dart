@@ -1,3 +1,4 @@
+import 'package:bobby/bloc/auth_bloc/auth.dart';
 import 'package:bobby/bloc/login_bloc/login_bloc.dart';
 import 'package:bobby/repositories/repositories.dart';
 import 'package:bobby/screens/auth_screen/register_screen.dart';
@@ -7,8 +8,12 @@ import '../../style/theme.dart' as Style;
 
 class LoginForm extends StatefulWidget {
   final UserRepositories userRepositories;
+  final AuthenticationBloc authenticationBloc;
 
-  const LoginForm({super.key, required this.userRepositories});
+  const LoginForm(
+      {super.key,
+      required this.userRepositories,
+      required this.authenticationBloc});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -155,8 +160,7 @@ class _LoginFormState extends State<LoginForm> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => RegisterScreen(
-                                  userRepositories: widget.userRepositories,
-                                ),
+                                    userRepositories: widget.userRepositories),
                               ),
                             );
                           },

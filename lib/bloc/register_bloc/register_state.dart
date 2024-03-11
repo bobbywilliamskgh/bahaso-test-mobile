@@ -22,3 +22,5 @@ class RegisterFailure extends RegisterState {
   @override
   String toString() => 'RegisterFailure ${error}';
 }
+
+class RegisterSuccess extends RegisterState {}
