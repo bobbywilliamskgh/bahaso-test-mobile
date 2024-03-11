@@ -87,8 +87,8 @@ class _MainScreenState extends State<MainScreen> {
                             : (quest.contains('.mp3') || quest.contains('.mp4'))
                                 ? Container(
                                     padding: const EdgeInsets.all(8.0),
-                                    height: 100,
-                                    width: 100,
+                                    height: 200,
+                                    width: 200,
                                     child: VideoPlayerWidget(videoUrl: quest))
                                 : Padding(
                                     padding: const EdgeInsets.all(16.0),
