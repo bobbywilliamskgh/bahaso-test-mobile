@@ -15,11 +15,7 @@ Future<List<dynamic>> fetchQuizList() async {
       'https://devbe.bahaso.com/api/v2/quiz/attempt-data-general-english-example';
   final Dio dio = Dio();
   var token = await userRepositories.getToken();
-  Response response = await dio.post(url,
-      options: Options(headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      }));
+  Response response = await dio.get(url);
   if (response.statusCode == 200) {
     Map<String, dynamic> responseBody = response.data;
     List<dynamic> data = responseBody['data'];
