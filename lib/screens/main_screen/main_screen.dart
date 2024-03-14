@@ -57,6 +57,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late Future<Map<String, dynamic>> futureUser;
   late Future<List<dynamic>> futureListQuiz;
+  int currentQuizIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -115,37 +116,97 @@ class _MainScreenState extends State<MainScreen> {
         future: futureListQuiz,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> quiz = snapshot.data![index];
-                List<dynamic> questions = quiz['question'];
-                return SingleChildScrollView(
-                  // height: 300,
-                  child: Column(
-                    children: [
-                      for (String quest in questions)
-                        (quest.contains('.jpg') || quest.contains('.png'))
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.network(quest),
-                              )
-                            : (quest.contains('.mp3') || quest.contains('.mp4'))
-                                ? Container(
+            List<dynamic> quizList = snapshot.data!;
+            Map<String, dynamic> quiz = quizList[currentQuizIndex];
+            bool isMultipleChoice = quiz.containsKey('data');
+            List<dynamic> choices = isMultipleChoice ? quiz['data'] : [];
+            print('choices');
+            print(choices);
+            List<dynamic> questions = quiz['question'];
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(border: Border.all()),
+                  height: 500,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: questions.length,
+                          itemBuilder: (context, index) {
+                            return (questions[index].contains('.jpg') ||
+                                    questions[index].contains('.png'))
+                                ? Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    height: 200,
-                                    width: 200,
-                                    child: VideoPlayerWidget(videoUrl: quest))
-                                : Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(quest),
+                                    child: Image.network(questions[index]),
                                   )
-                    ],
+                                : (questions[index].contains('.mp3') ||
+                                        questions[index].contains('.mp4'))
+                                    ? Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        height: 100,
+                                        width: 100,
+                                        child: VideoPlayerWidget(
+                                            videoUrl: questions[index]))
+                                    : Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Center(
+                                            child: Text(questions[index])),
+                                      );
+                          },
+                        ),
+                        Column(
+                          children: choices.isNotEmpty
+                              ? choices
+                                  .map((choice) => Text(choice['text']))
+                                  .toList()
+                              : [],
+                        )
+                      ],
+                    ),
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: quizList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              currentQuizIndex = index;
+                            });
+                            ;
+                          },
+                          child: Container(
+                              margin: EdgeInsets.all(5),
+                              height: 50,
+                              width: 50,
+                              child: MaterialButton(
+                                shape: CircleBorder(
+                                  side: BorderSide(
+                                    width: 1,
+                                    style: BorderStyle.solid,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentQuizIndex = index;
+                                  });
+                                },
+                                child: Text('${index + 1}'),
+                                color: Style.Colors.mainColor,
+                                textColor: Colors.white,
+                              )),
+                        );
+                      }),
+                ),
+              ],
             );
           } else if (snapshot.hasError) {
             return Text('${snapshot.error}');

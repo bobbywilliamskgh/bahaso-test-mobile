@@ -41,35 +41,38 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Stack(children: [
-            AspectRatio(
-              aspectRatio: _videoPlayerController.value.aspectRatio,
-              child: VideoPlayer(_videoPlayerController),
-            ),
-            Center(
-              child: SizedBox(
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      // If the video is playing, pause it.
-                      if (_videoPlayerController.value.isPlaying) {
-                        _videoPlayerController.pause();
-                      } else {
-                        // If the video is paused, play it.
-                        _videoPlayerController.play();
-                      }
-                    });
-                  },
-                  child: Icon(
-                    _videoPlayerController.value.isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow,
-                    size: 20,
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              AspectRatio(
+                aspectRatio: _videoPlayerController.value.aspectRatio,
+                child: VideoPlayer(_videoPlayerController),
+              ),
+              Center(
+                child: SizedBox(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        // If the video is playing, pause it.
+                        if (_videoPlayerController.value.isPlaying) {
+                          _videoPlayerController.pause();
+                        } else {
+                          // If the video is paused, play it.
+                          _videoPlayerController.play();
+                        }
+                      });
+                    },
+                    child: Icon(
+                      _videoPlayerController.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      size: 20,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ]);
+              )
+            ],
+          );
         } else {
           return Center(
             child: CircularProgressIndicator(),
