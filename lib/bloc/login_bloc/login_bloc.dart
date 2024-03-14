@@ -19,7 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         try {
           final token =
               await userRepositories.login(event.email, event.password);
-          authenticationBloc.add(LoggedIn(token: token));
+          authenticationBloc.add(LoggedIn(token: token, email: event.email));
           emit(LoginInitial());
         } catch (error) {
           emit(LoginFailure(error: error.toString()));

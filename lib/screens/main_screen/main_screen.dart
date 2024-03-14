@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bobby/bloc/auth_bloc/auth.dart';
 import 'package:bobby/repositories/repositories.dart';
 import 'package:bobby/style/theme.dart' as Style;
@@ -28,6 +26,26 @@ Future<List<dynamic>> fetchQuizList() async {
   }
 }
 
+Future<Map<String, dynamic>> fetchUserData() async {
+  final UserRepositories userRepositories = UserRepositories();
+  var url = 'https://reqres.in/api/users';
+  final Dio dio = Dio();
+  var email = await userRepositories.getEmail();
+  print('email : $email');
+  Response response = await dio.get(url);
+  if (response.statusCode == 200) {
+    Map<String, dynamic> responseBody = response.data;
+    List<dynamic> data = responseBody['data'];
+    print(data);
+    Map<String, dynamic> user =
+        data.firstWhere((user) => user['email'] == email);
+    print(user);
+    return user;
+  } else {
+    throw Exception('Failed to get user data');
+  }
+}
+
 class MainScreen extends StatefulWidget {
   final UserRepositories userRepositories;
   const MainScreen({super.key, required this.userRepositories});
@@ -37,11 +55,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late Future<Map<String, dynamic>> futureUser;
   late Future<List<dynamic>> futureListQuiz;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    futureUser = fetchUserData();
     futureListQuiz = fetchQuizList();
   }
 
@@ -49,6 +69,38 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: FutureBuilder(
+          future: futureUser,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              String avatarUrl = snapshot.data!['avatar'];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(avatarUrl),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+        title: FutureBuilder(
+          future: futureUser,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              print('snapshot');
+              print(snapshot.data);
+              String firstName = snapshot.data!['first_name'];
+              String lastName = snapshot.data!['last_name'];
+              return Text('Halo, $firstName $lastName !');
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
         backgroundColor: Style.Colors.mainColor,
         actions: [
           IconButton(

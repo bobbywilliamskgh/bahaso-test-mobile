@@ -14,6 +14,11 @@ class UserRepositories {
     return value!;
   }
 
+  Future<String> getEmail() async {
+    var value = await storage.read(key: 'email');
+    return value!;
+  }
+
   Future<bool> hasToken() async {
     var value = await storage.read(key: 'token');
     if (value != null) {
@@ -25,6 +30,10 @@ class UserRepositories {
 
   Future<void> persistToken(String token) async {
     await storage.write(key: 'token', value: token);
+  }
+
+  Future<void> persistEmail(String email) async {
+    await storage.write(key: 'email', value: email);
   }
 
   Future<void> deleteToken() async {

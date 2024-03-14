@@ -12,7 +12,8 @@ class AppStarted extends AuthenticationEvent {}
 
 class LoggedIn extends AuthenticationEvent {
   final String token;
-  const LoggedIn({required this.token});
+  final String email;
+  const LoggedIn({required this.token, required this.email});
 
   @override
   List<Object> get props => [token];

@@ -19,6 +19,7 @@ class AuthenticationBloc
     on<LoggedIn>((event, emit) async {
       emit(AuthenticationLoading());
       await userRepositories.persistToken(event.token);
+      await userRepositories.persistEmail(event.email);
       emit(AuthenticationAuthenticated());
     });
 
